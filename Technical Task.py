@@ -1,13 +1,6 @@
 import numpy as py
-import math as m
-import statistics as stat
 import pandas as pd
 import tkinter as tk
-import matplotlib.pyplot as plt
-from scipy.signal import savgol_filter
-import statistics
-#from pykalman import KalmanFilter 
-# pd.read_csv()
 
 
 ## setting pitch boundaries
@@ -60,14 +53,14 @@ for i in range(len(ids)):
     x_list.append(list(data.at[ids[i],'Pitch_x']))
     y_list.append(list(data.at[ids[i],'Pitch_y']))
     time_list.append(list(data.at[ids[i],'Time (s)']))
-    
-    
+        
 speeds_df=pd.DataFrame(speeds,ids)
 position_x=pd.DataFrame(x_list,ids)
 position_y=pd.DataFrame(y_list,ids)
 time=pd.DataFrame(time_list,ids)
 
 ## Fast Fourier Transform - smoothing speed data
+
 speeds_smoothed=[]
 for i in range(len(speeds)):
     rft=py.fft.rfft(speeds[i])
@@ -76,6 +69,7 @@ for i in range(len(speeds)):
     speeds_smoothed.append(list(y_smooth))
 
 ## moving point average(Taking 5 values)
+
 speeds_moving_avg=[]
 position_x_mov_avg=[]
 position_y_mov_avg=[]
@@ -95,14 +89,15 @@ time_mov_avgdf = pd.DataFrame(time_mov_avg,ids)
     
 speeds_moving_avg_df=pd.DataFrame(speeds_moving_avg,ids)
 
-
 # Time spend at Speed Zone 5
+
 dist_zone_5y=[]
 dist_zone_5x=[]
 dist_z5_save_x=[]
 dist_z5_save_y=[]
 
 ## x and y points spent at zone 5
+
 for i in range(len(speeds_moving_avg)):
     for j in range(len(speeds_moving_avg[i])):
         if speeds_moving_avg[i][j] > 19.8 and speeds_moving_avg[i][j] < 25.1 and (lower_x_boundary<x_list[i][j]<upper_x_boundary and lower_y_boundary<y_list[i][j]<upper_y_boundary):
@@ -118,6 +113,7 @@ for i in range(len(speeds_moving_avg)):
     dist_zone_5y=[]
 
 ## converting x and y into directional information
+
 dist_zone_5z=[]
 dist_zone_5z_save=[]
 for i in range(len(dist_z5_save_x)):
@@ -138,8 +134,8 @@ for i in range(len(dist_zone_5z_save)):
 sum_dist_zone_5_df= pd.DataFrame(sum_dist_zone_5,ids)
 sum_dist_zone_5_df=sum_dist_zone_5_df.sort_values(by=[sum_dist_zone_5_df.columns[0]],ascending=False) 
 sum_dist_zone_5_df.columns=['Total Distance at Zone 5 on pitch  (m) ']
-### length of time played in game
 
+### length of time played in game
 
 ### total distance covered
 z=[]
@@ -160,9 +156,11 @@ for i in range(len(z_store)):
     
     
 ## Sorted distance travelled
+
 dist_travelled_df=pd.DataFrame(dist_travelled,ids)
 dist_travelled_df=dist_travelled_df.sort_values(by=[dist_travelled_df.columns[0]],ascending=False) 
 dist_travelled_df.columns=['Total Distance Covered on pitch (m)']
+
 ## top speed for > 0.5 s
 
 max_moving_avg=[]
@@ -172,13 +170,6 @@ for i in range(len(speeds_moving_avg)):
 max_moving_avg_df=pd.DataFrame(max_moving_avg,ids)
 max_moving_avg_df=max_moving_avg_df.sort_values(by=[max_moving_avg_df.columns[0]],ascending=False) 
 max_moving_avg_df.columns=['Max Speeds on pitch (km/h)']
-
-
-## times out of position
-
-
-## subbed on/off
-
 
 # time spend on pitch
 time_outside_pitch=[]
@@ -196,11 +187,11 @@ for i in range(len(time_outside_pitch_save)):
 length_time_on_pitch_df=pd.DataFrame(length_time_on_pitch,ids)
 length_time_on_pitch_df=length_time_on_pitch_df.sort_values(by=[length_time_on_pitch_df.columns[0]],ascending=False)
 length_time_on_pitch_df.columns=['Length of Time on Pitch (s)']
+
+
 ## Sending Leaderboards to Excel
 
 ## Selecting folder for Excel to be saved into
-
-
 name1=Tk()
 name1.withdraw()
 
