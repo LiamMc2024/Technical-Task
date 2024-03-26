@@ -188,6 +188,15 @@ length_time_on_pitch_df=pd.DataFrame(length_time_on_pitch,ids)
 length_time_on_pitch_df=length_time_on_pitch_df.sort_values(by=[length_time_on_pitch_df.columns[0]],ascending=False)
 length_time_on_pitch_df.columns=['Length of Time on Pitch (s)']
 
+## Distance travelled per second on pitch
+distance_per_second=[]
+for i in range(len(length_time_on_pitch)):
+    distance_per_second.append((dist_travelled[i]/length_time_on_pitch[i]))
+
+distance_per_second_df=pd.DataFrame(distance_per_second,ids)
+distance_per_second_df=distance_per_second_df.sort_values(by=[distance_per_second_df.columns[0]],ascending=False) 
+distance_per_second_df.columns=['Average Speed on pitch (m/s)']
+
 
 ## Sending Leaderboards to Excel
 
@@ -205,3 +214,4 @@ with pd.ExcelWriter(excel_location_name) as writer:
     sum_dist_zone_5_df.to_excel(writer,sheet_name='Total Distance at Zone 5')
     max_moving_avg_df.to_excel(writer,sheet_name='Max Speeds')
     length_time_on_pitch_df.to_excel(writer,sheet_name='Total Time on Pitch')
+    distance_per_second_df.to_excel(writer,'Average Speed on pitch')
